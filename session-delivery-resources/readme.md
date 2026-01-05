@@ -31,11 +31,10 @@ _You will need to download these assets to your local device for review_.
 | Walkthrough | [Video](https://aka.ms/AAz1yuu) | Recorded end-to-end walkthrough for reference.  |
 | Introduction | [Video](https://aka.ms/AAz1yuy) | Reviews the [00-introduction](./../src/00-introduction.ipynb) notebook|
 | Setup | [Video](https://aka.ms/AAz2e1l) | Reviews the [00-setup](./../src/00-setup.md) markdown file with setup steps |
-| Recorded Demo 1 | [Video](https://aka.ms/AAz1yuv) | Reviews the [01-custom-grader](./../src/01-custom-grader.ipynb) notebook for demo 1|
-| Recorded Demo 2 | [Video](https://aka.ms/AAz1yux) | Reviews the [02-basic-fine-tuning](./../src/02-basic_fine-tuning.ipynb) notebook for demo 2 |
+| Recorded Demo 1 | [Video](https://aka.ms/AAz1yux) | Reviews the [02-basic-fine-tuning](./../src/01-basic_fine-tuning.ipynb) notebook for demo 1 |
+| Recorded Demo 2 | [Video](https://aka.ms/AAz1yuv) | Reviews the [01-custom-grader](./../src/02-custom-grader.ipynb) and [01-distillation](./../src/02-distillation.ipynb) notebooks for demo 2|
 | Recorded Demo 3 | [Video](https://aka.ms/AAz1yuw) | Reviews the [03-tool-calling-fine-tuning](./../src/03-tool-calling-fine-tuning.ipynb) notebook for demo 3 |
 | | |
-
 
 
 <br/>
