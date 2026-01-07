@@ -275,15 +275,86 @@ else
     SERVICE_API_IDENTITY_PRINCIPAL_ID=""
 fi
 
+# Find MCP Server Container App
+MCP_SERVER_NAME=$(az containerapp list \
+    --resource-group "$AZURE_RESOURCE_GROUP" \
+    --query "[?contains(name, 'mcp') || contains(name, 'retail')].name" -o tsv 2>/dev/null | head -n 1)
+
+if [ -n "$MCP_SERVER_NAME" ]; then
+    MCP_SERVER_FQDN=$(az containerapp show \
+        --name "$MCP_SERVER_NAME" \
+        --resource-group "$AZURE_RESOURCE_GROUP" \
+        --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
+    
+    if [ -n "$MCP_SERVER_FQDN" ]; then
+        MCP_SERVER_URL="https://$MCP_SERVER_FQDN"
+        echo -e "${GREEN}✓ Found MCP Server: $MCP_SERVER_NAME${NC}"
+        echo -e "${GREEN}✓ MCP Server URL: $MCP_SERVER_URL${NC}"
+    else
+        MCP_SERVER_URL="https://retail-mcp-server-sim.braveflower-06b407cc.eastus.azurecontainerapps.io"
+        echo -e "${YELLOW}⚠ Could not get MCP Server URL, using default${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠ No MCP Server Container App found, using default URL${NC}"
+    MCP_SERVER_URL="https://retail-mcp-server-sim.braveflower-06b407cc.eastus.azurecontainerapps.io"
+fi
+
 # Set image name default
 SERVICE_API_AND_FRONTEND_IMAGE_NAME="${ACR_NAME}.azurecr.io/contoso-chat:latest"
 
 echo ""
 
 # ============================================================================
-# Step 5: Get Application Insights connection string
+# Step 5: Get AI Project Connection String
 # ============================================================================
-echo -e "${YELLOW}Step 5: Retrieving Application Insights details...${NC}"
+echo -e "${YELLOW}Step 5: Constructing AI Project Connection String...${NC}"
+
+if [ -n "$AOAI_NAME" ]; then
+    # Get all AI Projects in the resource group
+    AI_PROJECTS=$(az resource list \
+        --resource-group "$AZURE_RESOURCE_GROUP" \
+        --resource-type "Microsoft.MachineLearningServices/workspaces" \
+        --query "[].name" -o tsv 2>/dev/null || echo "")
+    
+    # Look for project starting with "proj-"
+    AZURE_AI_PROJECT_NAME=""
+    while IFS= read -r project_name; do
+        if [[ "$project_name" == proj-* ]]; then
+            AZURE_AI_PROJECT_NAME="$project_name"
+            break
+        fi
+    done <<< "$AI_PROJECTS"
+    
+    # If no project found with proj- prefix, try to find any hub project
+    if [ -z "$AZURE_AI_PROJECT_NAME" ]; then
+        AZURE_AI_PROJECT_NAME=$(echo "$AI_PROJECTS" | head -n 1)
+    fi
+    
+    # If still no project, construct default name
+    if [ -z "$AZURE_AI_PROJECT_NAME" ]; then
+        # Extract the suffix from AOAI_NAME (e.g., aoai-xyzf4s5aekwli -> xyzf4s5aekwli)
+        SUFFIX="${AOAI_NAME#aoai-}"
+        AZURE_AI_PROJECT_NAME="proj-${SUFFIX}"
+    fi
+    
+    # Construct the connection string
+    AZURE_AI_PROJECT_CONNECTION_STRING="https://${AOAI_NAME}.services.ai.azure.com/api/projects/${AZURE_AI_PROJECT_NAME}"
+    
+    echo -e "${GREEN}✓ AI Foundry Name: $AOAI_NAME${NC}"
+    echo -e "${GREEN}✓ AI Project Name: $AZURE_AI_PROJECT_NAME${NC}"
+    echo -e "${GREEN}✓ Project Connection String: $AZURE_AI_PROJECT_CONNECTION_STRING${NC}"
+else
+    echo -e "${YELLOW}⚠ Cannot construct connection string (no AI Foundry resource found)${NC}"
+    AZURE_AI_PROJECT_CONNECTION_STRING=""
+    AZURE_AI_PROJECT_NAME=""
+fi
+
+echo ""
+
+# ============================================================================
+# Step 6: Get Application Insights connection string
+# ============================================================================
+echo -e "${YELLOW}Step 6: Retrieving Application Insights details...${NC}"
 
 # Find Application Insights resource
 APPINSIGHTS_RESOURCES=$(az resource list \
@@ -319,9 +390,9 @@ fi
 echo ""
 
 # ============================================================================
-# Step 6: Generate the new .env file
+# Step 7: Generate the new .env file
 # ============================================================================
-echo -e "${YELLOW}Step 6: Generating updated .env file...${NC}"
+echo -e "${YELLOW}Step 7: Generating updated .env file...${NC}"
 
 # Generate new .env content
 cat > "$ENV_FILE" << EOF
@@ -344,9 +415,11 @@ AZURE_OPENAI_DEPLOYMENT="$AZURE_AI_AGENT_DEPLOYMENT_NAME"
 
 # .... Microsoft Foundry Resources (from Azure portal)
 AZURE_AI_FOUNDRY_NAME="$AOAI_NAME"
-AZURE_AI_PROJECT_NAME="${AZURE_AI_PROJECT_NAME:-$AOAI_NAME}"
+AZURE_AI_PROJECT_NAME="$AZURE_AI_PROJECT_NAME"
+AZURE_AI_PROJECT_CONNECTION_STRING="$AZURE_AI_PROJECT_CONNECTION_STRING"
 AZURE_EXISTING_AIPROJECT_ENDPOINT="$AZURE_EXISTING_AIPROJECT_ENDPOINT"
 AZURE_EXISTING_AIPROJECT_RESOURCE_ID="$AZURE_EXISTING_AIPROJECT_RESOURCE_ID"
+FOUNDRY_RESOURCE_NAME="$AOAI_NAME"
 
 # .... Azure AI Search (Required for add-product-index script)
 AZURE_SEARCH_ENDPOINT="$AZURE_AI_SEARCH_ENDPOINT"
@@ -388,12 +461,15 @@ ENABLE_AZURE_MONITOR_TRACING="$ENABLE_AZURE_MONITOR_TRACING"
 AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED="$AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED"
 APPLICATIONINSIGHTS_CONNECTION_STRING="$APPINSIGHTS_CONNECTION_STRING"
 APPLICATIONINSIGHTS_INSTRUMENTATION_KEY="$APPINSIGHTS_INSTRUMENTATION_KEY"
+
+# .... MCP Server
+MCP_SERVER_URL="$MCP_SERVER_URL"
 EOF
 
 echo -e "${GREEN}✓ Generated new .env file${NC}\n"
 
 # ============================================================================
-# Step 7: Summary and Manual Actions
+# Step 8: Summary and Manual Actions
 # ============================================================================
 echo -e "${BLUE}======================================${NC}"
 echo -e "${BLUE}Summary${NC}"
