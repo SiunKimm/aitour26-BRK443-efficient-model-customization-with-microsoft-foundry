@@ -170,10 +170,17 @@ In addition, we want to be able to show _model selection_ with evaluators and gr
 
 <br/>
 
+## 📚 6. Complete Your Labs
 
-## ✅ 6. Validate your `.env` variables
+_Your infrastructure is now ready! You can now launch the instruction guide and start working through the labs!_.
 
-1. It's easy - there's a notebook for that!
+1. Open a new terminal in VS Code.
+1. Type `pip install -r requirements.txt` - wait a for all the resources to be installed.
+
+**Start with the Validate Setup lab - then keep going**:
+
+1. First, run the `0-setup/00-validate-setup.ipynb` notebook
+1. Verify that all required environment variables were set!
 1. Open `labs/00-validate-setup.ipynb` in your Visual Studio Code editor.
 1. Select Kernel - pick the default Python environment
 1. "Run All" - to have validation checks run.
@@ -189,26 +196,9 @@ In addition, we want to be able to show _model selection_ with evaluators and gr
    You're ready to proceed with the lab exercises.
 ```
 
-
 <br/>
 
-## 📚 9. Complete Your Labs
-
-_Your infrastructure is now ready! You can now launch the instruction guide and start working through the labs!_.
-
-1. Open a new terminal in VS Code.
-1. Type `pip install -r requirements.txt` - wait a for all the resources to be installed.
-
-**Start with the Validate Setup lab - then keep going**:
-
-1. First, run the `0-setup/00-validate-setup.ipynb` notebook
-1. Verify that all required environment variables were set!
-1. Then keep going down the list in the instruction guide.
-
-
-<br/>
-
-## 🧹 10. Teardown & Cleanup
+## 🧹 7. Teardown & Cleanup
 
 When you are all done with labs, you want to tear down the infrastructure _and_ delete the cloned template sources from your repo. Make sure you are in the `infra/` folder then run this command:
 
