@@ -88,6 +88,16 @@ if [ -z "$AZURE_LOCATION" ]; then
     fi
 fi
 
+# Get environment name (extract from resource group if it follows pattern rg-{env_name})
+if [ -z "$AZURE_ENV_NAME" ]; then
+    if [[ "$AZURE_RESOURCE_GROUP" =~ ^rg-(.+)$ ]]; then
+        AZURE_ENV_NAME="${BASH_REMATCH[1]}"
+    else
+        # Use resource group name as fallback
+        AZURE_ENV_NAME="$AZURE_RESOURCE_GROUP"
+    fi
+fi
+
 echo -e "${GREEN}✓ Azure CLI authenticated${NC}"
 echo -e "  Subscription: $AZURE_SUBSCRIPTION_ID"
 echo -e "  Resource Group: $AZURE_RESOURCE_GROUP"
@@ -257,10 +267,19 @@ if [ -n "$SERVICE_API_NAME" ]; then
         --resource-group "$AZURE_RESOURCE_GROUP" \
         --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
     
+    # Try system-assigned identity first, then user-assigned identity
     SERVICE_API_IDENTITY_PRINCIPAL_ID=$(az containerapp show \
         --name "$SERVICE_API_NAME" \
         --resource-group "$AZURE_RESOURCE_GROUP" \
         --query "identity.principalId" -o tsv 2>/dev/null || echo "")
+    
+    # If no system-assigned identity, check for user-assigned identity
+    if [ -z "$SERVICE_API_IDENTITY_PRINCIPAL_ID" ]; then
+        SERVICE_API_IDENTITY_PRINCIPAL_ID=$(az containerapp show \
+            --name "$SERVICE_API_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --query "identity.userAssignedIdentities.*.principalId | [0]" -o tsv 2>/dev/null || echo "")
+    fi
     
     if [ -n "$SERVICE_API_URI" ]; then
         SERVICE_API_URI="https://$SERVICE_API_URI"
@@ -402,6 +421,7 @@ cat > "$ENV_FILE" << EOF
 # ============================================================================
 
 # .... Azure Environment Variables
+AZURE_ENV_NAME="$AZURE_ENV_NAME"
 AZURE_LOCATION="$AZURE_LOCATION"
 AZURE_RESOURCE_GROUP="$AZURE_RESOURCE_GROUP"
 AZURE_SUBSCRIPTION_ID="$AZURE_SUBSCRIPTION_ID"
