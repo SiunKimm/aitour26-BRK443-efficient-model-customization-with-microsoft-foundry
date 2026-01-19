@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Jan 19, 2026
+
+**Demo Storyline Unification (Jan 19)**
+
+Restructured demos to tell a cohesive story addressing developer fears about fine-tuning:
+
+### Unified Narrative: "Building the Zava Agent"
+- **Part 1 (01-basic_fine-tuning)**: Make it sound right - tone & style fine-tuning
+- **Part 2 (02-tool-calling-fine-tuning)**: Make it act right - tool-calling accuracy
+
+---
+
 ## Jan 15, 2026
 
 **January 2026 Refresh (Jan 5-15)**
