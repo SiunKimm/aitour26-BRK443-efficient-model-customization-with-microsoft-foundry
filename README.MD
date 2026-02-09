@@ -34,7 +34,6 @@ By the end of this session, you should be able to:
 1. [Azure OpenAI Service](https://learn.microsoft.com/azure/ai-foundry/openai/overview/) - provide API access to OpenAI models in Microsoft Foundry
 1. [Stored Completions & Distillation](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/stored-completions#distillation) - fine-tuning to achieve model (size) compression
 1. [Reinforcement Fine-Tuning](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/reinforcement-fine-tuning) - fine-tuning reasoning models with rewards-based approach
-1. [RAFT (Retrieval Augmented Fine-Tuning)](https://github.com/Azure-Samples/azureai-foundry-finetuning-raft) - Hybrid RAG+Fine-Tuning to improve precision
 
 ---
 

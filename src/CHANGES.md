@@ -1,5 +1,47 @@
 # CHANGELOG
 
+## Jan 19, 2026
+
+**Demo Storyline Unification (Jan 19)**
+
+Restructured demos to tell a cohesive story addressing developer fears about fine-tuning:
+
+### Unified Narrative: "Building the Zava Agent"
+- **Part 1 (01-basic_fine-tuning)**: Make it sound right - tone & style fine-tuning
+- **Part 2 (02-tool-calling-fine-tuning)**: Make it act right - tool-calling accuracy
+
+---
+
+## Jan 15, 2026
+
+**January 2026 Refresh (Jan 5-15)**
+
+Repository refresh for the upcoming AI Tour 2026 deliveries:
+
+### Demo Reorganization & Validation (Jan 12-13)
+- **Re-organized demos**: Restructured all demo notebooks for improved flow and clarity
+- **Custom grader fixes**: Updated `01-custom-grader.ipynb` to fix errors in evaluation results
+- **Grammar and code cleanup**: Corrected grammar errors across documentation and finalized code executions
+
+### Environment & Setup Improvements (Jan 7-12)
+- **Environment script updates**: 
+  - Enhanced `infra/1-get-env.sh` to fill all required variables automatically
+  - Fixed setup instruction errors in documentation
+- **Tool-calling demo improvements**: Updated `03-tool-calling-fine-tuning.ipynb` with refined workflow
+
+### End-to-End Validation (Jan 5-7)
+- **E2E validation**: Completed full end-to-end validation of all demo notebooks
+- **Distillation updates**: Updated demo flows to properly include distillation workflows
+- **New validation data**: Added `zava-tone-validation-c743364d.jsonl` with 20 new validation examples for DIY hardware store assistant
+
+### Key Files Modified
+- All 4 core notebooks validated and updated
+- `infra/1-get-env.sh` enhanced for better variable extraction
+- New validation datasets with comprehensive retail assistant examples
+- Infrastructure scripts tested and verified
+
+---
+
 ## Dec 19, 2025
 
 **Session Delivery Resources**

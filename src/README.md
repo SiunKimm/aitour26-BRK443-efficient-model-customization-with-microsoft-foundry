@@ -9,12 +9,12 @@ This README documents the steps required to setup and run the demos for Act 2. B
 1. (Optional) Manually add an App Insights resource via thr `Tracing` tab
 1. Create the `.env` file and update it with relevant environment variables
 1. Run the script to update role access permissions for updating the search index
-1. Manually add a `text-embedding-ada-002` model to support index creation
+1. Manually add a `text-embedding-large-3` model to support index creation
 1. Run the notebook to populate Zava data in the Azure AI Search index
 
 <br/>
 
-## 2. Run Notebook: `00-getting-started.ipynb`
+## 2. Run Notebook: `00-introduction.ipynb`
 
 1. Deploy additinal AI models in the Microsoft Foundry (manually)
 1. Run the notebook to get a sense for latency/token cost for a basic prompt
