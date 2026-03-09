@@ -1,0 +1,42 @@
+# ============================================================================
+# .gitattributes — cross-platform (Windows + Linux devcontainer)
+# ============================================================================
+
+# Default: auto-detect text files, normalize to LF in the index,
+# check out with platform-native line endings (CRLF on Windows, LF on Linux)
+* text=auto
+
+# ── Files that MUST be LF (will break with CRLF) ────────
+*.sh        text eol=lf
+Dockerfile  text eol=lf
+
+# ── Source code (safe with platform-native EOL) ──────────
+*.py        text
+*.md        text
+*.txt       text
+
+# ── Data formats ─────────────────────────────────────────
+*.json      text
+*.jsonl     text
+*.csv       text
+*.env       text
+
+# ── Infrastructure / Config ──────────────────────────────
+*.bicep     text
+*.yml       text
+*.yaml      text
+
+# ── Jupyter notebooks ────────────────────────────────────
+*.ipynb     text
+
+# ── Images (binary — no EOL conversion) ─────────────────
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.svg       binary
+
+# ── Other binary ─────────────────────────────────────────
+*.pdf       binary
+*.zip       binary
+*.tar.gz    binary
